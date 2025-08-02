@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice Agent</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/wavesurfer.js"></script>
+  <style>
+    body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #3b2f63, #c4a3cf);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.card {
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: white;
+  z-index: 1;
+  width: 90%;
+  max-width: 400px;
+}
+
+.card h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.card button {
+  background-color: white;
+  color: #3b2f63;
+  font-weight: bold;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.card button:hover {
+  background-color: #e2d3f3;
+}
+
+.agent-message {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1.5rem;
+  font-weight: 600;
+  display: none;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.footer {
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  color: #ffdff0;
+}
+
+.waveform-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen relative">
+  <div class="waveform-container" id="waveform"></div>
+
+  <div class="card z-10 text-center w-96">
+    <h1 class="text-white text-3xl font-bold mb-2">🎙️ Voice Agent</h1>
+    <p class="text-white mb-4">Click the mic and start speaking.<br/>Watch your voice come to life!</p>
+
+    <button id="recordBtn" class="bg-white text-indigo-800 font-semibold px-6 py-2 rounded shadow-lg hover:bg-indigo-100 transition">Start Recording</button>
+
+    <div id="agentMsg" class="agent-message">👋 Hello! I'm your Voice Agent.</div>
+
+    <p class="text-sm text-pink-300 mt-4">🚀 Day 1 of #30DaysOfVoiceAgents</p>
+  </div>
+
+  <script>
+    let isRecording = false;
+    const recordBtn = document.getElementById('recordBtn');
+    const agentMsg = document.getElementById('agentMsg');
+
+    const wavesurfer = WaveSurfer.create({
+      container: '#waveform',
+      waveColor: 'white',
+      interact: false,
+      cursorWidth: 0,
+      height: 100,
+      normalize: true,
+      responsive: true,
+      plugins: [
+        WaveSurfer.microphone.create()
+      ]
+    });
+
+    recordBtn.addEventListener('click', () => {
+      if (!isRecording) {
+        wavesurfer.microphone.start();
+        agentMsg.style.display = 'block';
+        recordBtn.textContent = "Stop Recording";
+      } else {
+        wavesurfer.microphone.stop();
+        agentMsg.style.display = 'none';
+        recordBtn.textContent = "Start Recording";
+      }
+      isRecording = !isRecording;
+    });
+
+    // Handle error if no mic access
+    wavesurfer.microphone.on('deviceError', function(code) {
+      console.warn('Device error: ' + code);
+    });
+  </script>
+</body>
+</html>

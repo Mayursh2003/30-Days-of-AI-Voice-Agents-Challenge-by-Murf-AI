@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environments
+venv/
+env/
+ENV/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Static/minified if generated
+*.min.js
