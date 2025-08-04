@@ -1,33 +1,32 @@
-let isRecording = false;
-const recordBtn = document.getElementById('recordBtn');
-const agentMsg = document.getElementById('agentMsg');
+document.addEventListener("DOMContentLoaded", () => {
+  const textInput = document.getElementById("textInput");
+  const generateBtn = document.getElementById("generateBtn");
+  const audioPlayer = document.getElementById("audioPlayer");
 
-const wavesurfer = WaveSurfer.create({
-  container: '#waveform',
-  waveColor: 'white',
-  interact: false,
-  cursorWidth: 0,
-  height: 100,
-  normalize: true,
-  responsive: true,
-  plugins: [
-    WaveSurfer.microphone.create()
-  ]
-});
+  generateBtn.addEventListener("click", async () => {
+    const text = textInput.value.trim();
+    if (!text) {
+      alert("Please enter some text.");
+      return;
+    }
 
-recordBtn.addEventListener('click', () => {
-  if (!isRecording) {
-    wavesurfer.microphone.start();
-    agentMsg.style.display = 'block';
-    recordBtn.textContent = "Stop Recording";
-  } else {
-    wavesurfer.microphone.stop();
-    agentMsg.style.display = 'none';
-    recordBtn.textContent = "Start Recording";
-  }
-  isRecording = !isRecording;
-});
+    try {
+      const response = await fetch("/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
 
-wavesurfer.microphone.on('deviceError', function(code) {
-  console.warn('Device error: ' + code);
+      const data = await response.json();
+
+      if (data.audio_url) {
+        audioPlayer.src = data.audio_url;
+        audioPlayer.play();
+      } else {
+        alert("Error: " + (data.error || "TTS failed."));
+      }
+    } catch (error) {
+      alert("An error occurred: " + error.message);
+    }
+  });
 });

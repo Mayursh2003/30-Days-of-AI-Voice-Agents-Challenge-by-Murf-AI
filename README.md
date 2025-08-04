@@ -82,7 +82,7 @@ Open [http://localhost:8000](http://localhost:8000) in your browser.
 
 ## 🎯 Goal of This Project
 
-This project is part of the [30 Days of Voice Agents Challenge](https://forms.gle/4HocRJbAhESLVUAH9) organized by **Murf**.
+This project is part of the [30 Days of Voice Agents Challenge] organized by **Murf AI**.
 
 ### 🌟 What You Get:
 
